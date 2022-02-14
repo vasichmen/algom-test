@@ -11290,19 +11290,6 @@ textarea.form-control-lg {
   background-color: grey;
 }
 
-.menu {
-  margin-top: 20px;
-}
-.menu__list {
-  text-decoration: none;
-  list-style-type: none;
-  display: flex;
-  flex-direction: row;
-}
-.menu__item {
-  margin-right: 10px;
-}
-
 .checker-container {
   display: flex;
   flex-direction: row;
@@ -11311,6 +11298,10 @@ textarea.form-control-lg {
 .checker-container__item {
   width: 33%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.checker-header {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -11325,12 +11316,12 @@ textarea.form-control-lg {
   width: 100%;
 }
 .editor-action-panel {
-  height: 30px;
+  height: 90px;
   margin-top: 0;
 }
 
 .preview {
-  margin-top: 30px;
+  margin-top: 90px;
   width: 100%;
   height: 600px;
   overflow-wrap: anywhere;
@@ -11340,7 +11331,7 @@ textarea.form-control-lg {
 }
 
 .report {
-  margin-top: 30px;
+  margin-top: 90px;
   height: 600px;
   width: 100%;
 }

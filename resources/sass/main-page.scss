@@ -1,22 +1,6 @@
-$panelHeight: 30px;
+$panelHeight: 90px;
 $blockHeight: 600px;
 $background: #d7d7d7;
-
-.menu {
-  margin-top: 20px;
-
-  &__list {
-    text-decoration: none;
-    list-style-type: none;
-
-    display: flex;
-    flex-direction: row;
-  }
-
-  &__item {
-    margin-right: 10px;
-  }
-}
 
 .checker {
   &-container {
@@ -28,9 +12,14 @@ $background: #d7d7d7;
       width: 33%;
       height: 100%;
       display: flex;
-      align-items: center;
       flex-direction: column;
     }
+  }
+
+  &-header{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 }
 

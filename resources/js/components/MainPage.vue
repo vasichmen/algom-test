@@ -1,34 +1,33 @@
 <template>
     <div class="page-box">
-        <div class="menu">
-            <ul class="menu__list">
-                <li class="menu__item">
-                    <button @click="handleCheckLinks">
-                        Проверить ссылки
-                    </button>
-                </li>
-            </ul>
-        </div>
-
         <div class="checker-container">
             <div class="checker-container__item">
                 <div class="checker-header">
                     HTML
                 </div>
-                <div class="menu editor-action-panel">
-                    <ul class="menu__list">
-                        <li class="menu__item">
-                            <button @click="handleAddLink">
-                                Добавить ссылку
-                            </button>
-                        </li>
-                    </ul>
+                <div class="editor-action-panel">
+                    <button @click="handleAddLink">
+                        Добавить ссылку
+                    </button>
+                    <!-- todo: сделать добавление ссылки через модалку -->
+                    <div>
+                        <input
+                            v-model="newLink.text"
+                            type="text"
+                            placeholder="Текст ссылки"
+                        />
+                        <input
+                            v-model="newLink.href"
+                            type="text"
+                            placeholder="Адрес ссылки"
+                        />
+                    </div>
                 </div>
                 <div class="editor-text-field">
                     <textarea
+                        id="markup"
                         v-model="markup"
                         class="editor-text-field__textarea"
-                        name="markup"
                     ></textarea>
                 </div>
             </div>
@@ -83,6 +82,11 @@
                 freeThreads: PARALLEL_COUNT,
                 requests: [],
                 isChecking: false,
+
+                newLink: {
+                    text: '',
+                    href: '',
+                },
             }
             ;
         },
@@ -91,7 +95,6 @@
             markup(newMarkup) {
                 if (!newMarkup) {
                     this.abortAllRequests();
-                    this.report = [];
                 }
                 else {
                     this.checkLinks(newMarkup);
@@ -100,11 +103,14 @@
         },
 
         methods: {
-            handleCheckLinks() {
-                this.checkLinks(this.markup);
-            },
             handleAddLink() {
-                console.log('add link');
+                let startPosition = document.getElementById('markup')?.selectionStart;
+                if (startPosition === undefined) {
+                    return;
+                }
+
+                let linkMarkup = `<a href="${this.newLink.href}">${this.newLink.text}</a>`;
+                this.markup = `${this.markup.slice(0, startPosition)}${linkMarkup}${this.markup.slice(startPosition)}`;
             },
             getReportItemClasses(item) {
                 return {
@@ -119,14 +125,13 @@
              * @param markup
              */
             async checkLinks(markup) {
-
                 //если обработка еще не завершена, то останавливаем
                 if (this.isChecking) {
                     this.abortAllRequests();
-                    this.report = [];
                 }
 
                 this.isChecking = true;
+                this.report = [];
 
                 //чтоб достать все ссылки из верстки создандим новый объект DOM
                 let rootElement = document.createElement('div');
@@ -174,11 +179,12 @@
              * @returns {Promise<unknown>}
              */
             async callRequest(link) {
+                //ждем сободного потока для работы
                 while (this.freeThreads === 0) {
-                    await new Promise(r => setTimeout(r, 100));
+                    await new Promise(r => setTimeout(r, 200));
                 }
 
-                //уменьшаем число совбодных потоков
+                //уменьшаем число свободных потоков
                 this.freeThreads--;
 
                 //отправляем запрос на бэк
